@@ -224,4 +224,30 @@ function try_npzread(fname_npz)
     end
 end
 
+"""
+Append to the artifact with the given file name (assumed to be at the top level
+of the artifacts folder of the given run) the given string and a new line
+character.
+
+Useful if you want to iteratively build up artifacts (e.g. additional logs that
+cannot be written to mlflow directly).
+"""
+function appendtoartifact(mlf, mlfrun, name, str)
+    # If the artifact does not yet exist, create an empty file first.
+    lsarts = listartifacts(mlf, mlfrun)
+    fpaths = getproperty.(lsarts, :filepath)
+    fnamemap = Dict([basename(fpath) => fpath for fpath in fpaths])
+    # If `name` is not yet an existing artifact's file name, create
+    # that file and return its path.
+    fpath = get(fnamemap, name) do
+        # Create empty artifact file if not yet existing.
+        return logartifact(mlf, mlfrun, name, "")
+    end
+
+    # Append to the file.
+    open(fpath, "a") do file
+        return println(file, str)
+    end
+end
+
 end
