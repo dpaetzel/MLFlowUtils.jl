@@ -1,15 +1,19 @@
 module MLFlowUtils
 
 using Base64
+using LibGit2
 using CSV
 using DataFrames
 using Dates
 using MLFlowClient
 using NPZ
 using Serialization
+using SHA
 using TOML
 
-export getmlf, loadruns, readcsvartifact, try_npzread
+export getmlf, loadruns, readcsvartifact, try_npzread, sha_serialize, runmlf
+
+include("runs.jl")
 
 """
     getmlf(; url="http://localhost:5000/api", fname_config="config.toml")
