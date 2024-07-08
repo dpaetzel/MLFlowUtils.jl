@@ -101,7 +101,7 @@ given by `mlf`.
 function loadruns(mlf::MLFlow, expname::String; max_results=5000)
     # TODO Consider to serialize-cache this as well (see the `jid` variant of
     # `loadruns`)
-    url = mlf.baseuri
+    url = mlf.apiroot
 
     @info "Searching for experiment $expname at $url …"
     mlfexp = getexperiment(mlf, expname)
