@@ -12,7 +12,7 @@ using TOML
 export getmlf, loadruns, readcsvartifact, try_npzread
 
 """
-    getmlf(; url="http://localhost:5000", fname_config="config.toml")
+    getmlf(; url="http://localhost:5000/api", fname_config="config.toml")
 
 Get an MLFlow client object which uses HTTP authentication as described in [this
 GitHub
@@ -20,7 +20,7 @@ comment](https://github.com/JuliaAI/MLFlowClient.jl/issues/33#issuecomment-18305
 
 Authentication credentials are read from the given TOML file.
 """
-function getmlf(; url="http://localhost:5000", fname_config="config.toml")
+function getmlf(; url="http://localhost:5000/api", fname_config="config.toml")
     config = try
         open(fname_config, "r") do file
             return TOML.parse(read(file, String))
@@ -93,7 +93,7 @@ function todatetime(mlflowtime)
 end
 
 """
-    loadruns([mlf="http://localhost:5000"], expname; max_results=5000)
+    loadruns([MLFlow("http://localhost:5000/api")], expname; max_results=5000)
 
 Load all available runs for the given experiment from the mlflow tracking server
 given by `mlf`.
@@ -125,7 +125,7 @@ function loadruns(mlf::MLFlow, expname::String; max_results=5000)
 end
 
 loadruns(expname; kw...) =
-    loadruns(MLFlow("http//localhost:5000"), expname; kw...)
+    loadruns(MLFlow("http//localhost:5000/api"), expname; kw...)
 
 const nameformat = r"^([^-]+)-(([^-]*)-)?(\d+)_(\d+)$"
 
@@ -135,7 +135,7 @@ function parse_rname(rname)
 end
 
 """
-    loadruns([mlf="http://localhost:5000"], expname, jids, n_runs; max_results=5000)
+    loadruns([MLFlow("http://localhost:5000/api")], expname, jids, n_runs; max_results=5000)
 
 Load, from the mlflow tracking server given by `mlf`, all available runs whose
 name contains (see `nameformat`) one of the given job IDs. Check whether
@@ -167,7 +167,7 @@ function loadruns(
 end
 
 loadruns(expname::String, jids, n_runs::Int; max_results::Int=5000) = loadruns(
-    MLFlow("http//localhost:5000"),
+    MLFlow("http//localhost:5000/api"),
     expname,
     jids,
     n_runs;
