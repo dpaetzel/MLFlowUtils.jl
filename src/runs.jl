@@ -99,7 +99,7 @@ function runmlf(
                 ),
             )
             logparam(mlf, mlfrun_parent, "hash_params", hash_params_parent)
-            logparam(mlf, mlfrun_parent, params_parent)
+            logparam(mlf, mlfrun_parent, pairs(params_parent))
         else # !isempty(runs_existing)
             @info "Found existing parent run in mlflow."
             mlfrun_parent =
