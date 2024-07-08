@@ -1,8 +1,8 @@
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.10.2"
+julia_version = "1.10.4"
 manifest_format = "2.0"
-project_hash = "e9a851616b85964bbc89759b3fa043f7f7b16b4e"
+project_hash = "4675b55e556fc927686752e433ad7d45e628cdf9"
 
 [[deps.ArgTools]]
 uuid = "0dad84c5-d112-42e6-8d28-ef12dabb789f"
@@ -44,7 +44,7 @@ weakdeps = ["Dates", "LinearAlgebra"]
 [[deps.CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
-version = "1.1.0+0"
+version = "1.1.1+0"
 
 [[deps.ConcurrentUtilities]]
 deps = ["Serialization", "Sockets"]
@@ -198,9 +198,11 @@ version = "1.0.3"
 
 [[deps.MLFlowClient]]
 deps = ["Dates", "FilePathsBase", "HTTP", "JSON", "ShowCases", "URIs", "UUIDs"]
-git-tree-sha1 = "5cc2a5453856e79f4772269fbe6b19fcdcba391a"
+git-tree-sha1 = "024319e69f417e3e66a5fdb65b20eb990a02214f"
+repo-rev = "add-set-tag"
+repo-url = "https://github.com/dpaetzel/MLFlowClient.jl"
 uuid = "64a0f543-368b-4a9a-827a-e71edb2a0b83"
-version = "0.4.7"
+version = "0.5.1"
 
 [[deps.Markdown]]
 deps = ["Base64"]
