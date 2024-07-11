@@ -129,7 +129,7 @@ function loadruns(mlf::MLFlow, expname::String; max_results=5000)
 end
 
 loadruns(expname; kw...) =
-    loadruns(MLFlow("http//localhost:5000/api"), expname; kw...)
+    loadruns(MLFlow("http://localhost:5000/api"), expname; kw...)
 
 const nameformat = r"^([^-]+)-(([^-]*)-)?(\d+)_(\d+)$"
 
@@ -171,7 +171,7 @@ function loadruns(
 end
 
 loadruns(expname::String, jids, n_runs::Int; max_results::Int=5000) = loadruns(
-    MLFlow("http//localhost:5000/api"),
+    MLFlow("http://localhost:5000/api"),
     expname,
     jids,
     n_runs;
