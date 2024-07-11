@@ -53,11 +53,16 @@ function run_to_dict(r)
         Dict("params.$key" => val.value for (key, val) in datadict[:params])
     metricsdict =
         Dict("metrics.$key" => val.value for (key, val) in datadict[:metrics])
+    # Tags are stored as weird dicts as of 2024-07-11.
+    tagsdict = Dict(
+        ("tags." * keyval["key"]) => keyval["value"] for
+        keyval in datadict[:tags]
+    )
     # Transform infodict keys to String as well (params and metrics contain
     # dots which make it hard to use Symbols everywhere, but we want uniformity).
     infodict = Dict(string(key) => val for (key, val) in infodict)
     # Note that we ignore tags for now.
-    return rundict = merge(infodict, paramsdict, metricsdict)
+    return rundict = merge(infodict, paramsdict, metricsdict, tagsdict)
 end
 
 """
