@@ -23,6 +23,8 @@ function sha_serialize(obj)
 end
 
 """
+    runmlf(f, mlf, name_exp; <keyword arguments>, <arguments for f>)
+
 Set up an Mlflow scaffold for the callable `f` and run it unless it has already
 been run with the provided parameters on the current Git commit.
 
@@ -40,6 +42,32 @@ Scaffolding roughly consists of (check code, might still change)
 Note that due to how Julia handles `do` blocks, we provide `f` with `params` as
 a named tuple to make it possible (and as a result actually requiring) to
 provide keyword arguments.
+
+# Arguments
+
+- `f`: Function to call.
+- `mlf::MLFlow`
+- `name_exp::String`: Name of MLflow experiment.
+- `rerun::Bool=false`: Whether to rerun the configuration even if it already
+  exists in MLflow (checked by hashing the arguments for `f`).
+- `check_gitdirty::Bool=true`: Whether to block execution if Git is dirty.
+- `params_parent=missing`:: `missing` or if this run should be assigned to a
+  parent run then a `NamedTuple` of that parent run's parameters so that they
+  can be hashed.
+- `params...`: Any other keyword arguments are passed to `f` by calling `f(mlf,
+  mlfrun, params...)`. See the example below.
+
+# Example
+
+```
+julia> mlf = getmlf()
+julia> runmlf(mlf, "expname"; a=1.0, b=2.0) do mlf, mlfrun, params...
+  params = NamedTuple(params)
+  println(params.a)
+  println(params.b)
+  logmetric(mlf, mlfrun, "sum", params.a + params.b)
+end
+```
 """
 function runmlf(
     f,
