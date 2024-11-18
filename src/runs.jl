@@ -79,6 +79,8 @@ function runmlf(
     params_parent=missing,
     params...,
 )
+    params = Dict(params)
+
     git_commit = LibGit2.head(".")
     @info "Git commit is $git_commit."
     git_dirty = LibGit2.isdirty(GitRepo("."))
@@ -226,7 +228,7 @@ function runmlf(
 
         # Perform the run.
         try
-            f(mlf, mlfrun, params...)
+            f(mlf, mlfrun, params)
         catch e
             @warn "Run $name_run_final failed with $(string(e))."
             @warn "Writing exception information to MLflow …"
