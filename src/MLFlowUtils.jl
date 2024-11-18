@@ -12,7 +12,8 @@ using SHA
 using TOML
 
 @reexport using MLFlowClient
-export getmlf, loadruns, readcsvartifact, try_npzread, sha_serialize, runmlf
+export getmlf,
+    loadruns, readcsvartifact, try_npzread, sha_serialize, runmlf, settag
 
 include("runs.jl")
 
