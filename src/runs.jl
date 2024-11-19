@@ -80,9 +80,9 @@ function runmlf(
     params...,
 )
     params = Dict(params)
+    hash_params = sha_serialize(params)
 
     git_commit = LibGit2.head(".")
-    @info "Git commit is $git_commit."
     git_dirty = LibGit2.isdirty(GitRepo("."))
     if check_gitdirty && git_dirty
         throw(
@@ -98,7 +98,11 @@ function runmlf(
 
     if !ismissing(params_parent)
         hash_params_parent = sha_serialize(params_parent)
-        @info "Parent run parameter SHA starts with $(hash_params_parent[1:10])."
+        @info "Preparing to start child run …\n" *
+              "Git commit is $git_commit.\n" *
+              "Run parameter SHA starts with $(hash_params[1:10]).\n" *
+              "Parent run parameter SHA starts with " *
+              "$(hash_params_parent[1:10])."
 
         # Check whether the parent run already exists to register this run with
         # it.
@@ -174,11 +178,11 @@ function runmlf(
             []
         end
     else # ismissing(params_parent)
+        @info "Preparing to start run …\n" *
+              "Git commit is $git_commit.\n" *
+              "Run parameter SHA starts with $(hash_params[1:10])."
         tag_parentrun = []
     end
-
-    hash_params = sha_serialize(params)
-    @info "Run parameter SHA starts with $(hash_params[1:10])."
 
     runs_existing = searchruns(
         mlf,
