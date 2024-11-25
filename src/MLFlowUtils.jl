@@ -13,7 +13,13 @@ using TOML
 
 @reexport using MLFlowClient
 export getmlf,
-    loadruns, readcsvartifact, try_npzread, sha_serialize, runmlf, settag
+    loadruns,
+    readcsvartifact,
+    try_npzread,
+    sha_serialize,
+    runmlf,
+    runs2df,
+    settag
 
 include("runs.jl")
 
@@ -68,14 +74,26 @@ function run_to_dict(r)
 end
 
 """
-    runs_to_df(runs::Vector{MLFlowRun})
+    runs2df(mlfruns::Vector{MLFlowRun})
 
 Transforms the vector into a `DataFrame`.
 """
-function runs_to_df(runs::Vector{MLFlowRun})
-    dicts = run_to_dict.(runs)
+function runs2df(mlfruns::Vector{MLFlowRun})
+    @info "Converting mlflow data to Julia representations …"
+    dicts = run_to_dict.(mlfruns)
     add_missing_keys!(dicts)
-    return df = DataFrame(dicts)
+    df = DataFrame(dicts)
+
+    # Fix dates.
+    df[!, "start_time"] .= todatetime.(df.start_time)
+    df[!, "end_time"] .= passmissing(todatetime).(df.end_time)
+
+    @info "Adding helpful additional columns …"
+    df[!, "duration"] = df.end_time .- df.start_time
+    df[!, "duration_min"] =
+        Missings.replace(df.end_time, now()) .- df.start_time
+
+    return df
 end
 
 """
@@ -118,19 +136,11 @@ function loadruns(mlf::MLFlow, expname::String; max_results=5000)
     mlfexp = getexperiment(mlf, expname)
 
     @info "Loading runs for experiment \"$(mlfexp.name)\" from $url …"
-    runs = searchruns(mlf, mlfexp; max_results=max_results)
-    @info "Finished loading $(length(runs)) runs for experiment " *
+    mlfruns = searchruns(mlf, mlfexp; max_results=max_results)
+    @info "Finished loading $(length(mlfruns)) runs for experiment " *
           "\"$(mlfexp.name)\" from $url."
 
-    @info "Converting mlflow data to Julia representations …"
-    df = runs_to_df(runs)
-    df[!, "start_time"] .= todatetime.(df.start_time)
-    df[!, "end_time"] .= passmissing(todatetime).(df.end_time)
-
-    @info "Adding helpful additional columns …"
-    df[!, "duration"] = df.end_time .- df.start_time
-    df[!, "duration_min"] =
-        Missings.replace(df.end_time, now()) .- df.start_time
+    df = runs2df(mlfruns)
 
     return df
 end

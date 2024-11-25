@@ -39,7 +39,7 @@ end
 mlfexp = getexperiment(mlf, "example")
 runs =
     searchruns(mlf, mlfexp; filter="params.a = \"42\" and params.b = \"15\"")
-df = MLFlowUtils.runs_to_df(runs)
+df = MLFlowUtils.runs2df(runs)
 mlfrun = df[end, :]
 runid_parent = mlfrun.run_id
 runs = searchruns(
@@ -47,7 +47,7 @@ runs = searchruns(
     mlfexp;
     filter="tags.$(MLFlowUtils.MLFLOW_PARENT_RUN_ID) = \"$runid_parent\"",
 )
-df = MLFlowUtils.runs_to_df(runs)
+df = MLFlowUtils.runs2df(runs)
 
 # We can also nest `runmlf` to achieve the parent run hierarchy.
 mlf = getmlf()
