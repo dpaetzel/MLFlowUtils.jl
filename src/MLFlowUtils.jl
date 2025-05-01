@@ -271,4 +271,27 @@ function appendtoartifact(mlf, mlfrun, name, str)
     end
 end
 
+"""
+Better types, almost automatedly. Apply as `mapcols!(parseth, df)` to your
+`DataFrame`.
+
+Unlikely to yield strange things but always check, e.g. by `show(stdout,
+"text/plain", describe(df))`!
+"""
+function parseth(col)
+    if eltype(col) != String
+        return col
+    end
+
+    colnew = try
+        parse.(Int, col)
+    catch error
+        try
+            parse.(Float64, col)
+        catch error
+            return col
+        end
+    end
+end
+
 end
