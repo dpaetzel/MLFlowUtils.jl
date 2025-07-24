@@ -84,6 +84,10 @@ function runs2df(mlfruns::Vector{MLFlowRun})
     add_missing_keys!(dicts)
     df = DataFrame(dicts)
 
+    if isempty(df)
+        return df
+    end
+
     # Fix dates.
     df[!, "start_time"] .= todatetime.(df.start_time)
     df[!, "end_time"] .= passmissing(todatetime).(df.end_time)
