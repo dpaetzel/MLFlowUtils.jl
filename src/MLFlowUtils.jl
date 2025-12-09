@@ -283,16 +283,16 @@ Unlikely to yield strange things but always check, e.g. by `show(stdout,
 "text/plain", describe(df))`!
 """
 function parseth(col)
-    if eltype(col) != String
+    T = nonmissingtype(eltype(col))
+    if T != String
         return col
     end
-
-    colnew = try
-        parse.(Int, col)
-    catch error
+    try
+        passmissing(x -> parse(Int, x)).(col)
+    catch
         try
-            parse.(Float64, col)
-        catch error
+            passmissing(x -> parse(Float64, x)).(col)
+        catch
             return col
         end
     end
